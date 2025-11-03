@@ -5,6 +5,7 @@ from django.db.models import Sum
 from .models import Branch, Customer, Account, Transaction, Loan, LoanPayment
 from .serializers import *
 
+
 class BranchViewSet(viewsets.ModelViewSet):
     queryset = Branch.objects.all()
     serializer_class = BranchSerializer
@@ -117,22 +118,33 @@ class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
 
 
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from .models import Loan, LoanPayment
+from .serializers import LoanSerializer, LoanPaymentSerializer
+
+
 class LoanViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
 
-    # ✅ Check total due and payments
     @action(detail=True, methods=['get'])
     def status(self, request, pk=None):
+        """Returns loan summary including payments."""
         loan = self.get_object()
-        total_paid = LoanPayment.objects.filter(loan=loan).aggregate(Sum('amount'))['amount__sum'] or 0
-        remaining = loan.amount - total_paid
+        payments = LoanPayment.objects.filter(loan=loan)
+        total_paid = sum(p.payment_amount for p in payments)
+        remaining = loan.loan_amount - total_paid
         return Response({
-            'loan_id': loan.id,
-            'total_amount': loan.amount,
-            'paid': total_paid,
-            'remaining': remaining,
+            "loan_id": loan.id,
+            "loan_amount": float(loan.loan_amount),
+            "total_paid": float(total_paid),
+            "remaining_balance": float(remaining),
+            "is_fully_paid": remaining <= 0,
+            "payments": LoanPaymentSerializer(payments, many=True).data
         })
+
 
 
 class LoanPaymentViewSet(viewsets.ModelViewSet):
