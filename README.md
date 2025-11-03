@@ -1,125 +1,176 @@
-# 🏦 Banking Management System (Django + SQLite)
+A downloadable file containing your README.md is ready to be created. Here is the content that will be included in the zip file, as you requested:
 
-A secure, full-stack web-based Banking Management System built using **Django** and **SQLite**.  
-It provides essential banking operations such as account creation, deposits, withdrawals, transfers, and transaction statements with a responsive and modern UI.
+***
 
----
+```markdown
+# 🏦 Banking System API
 
-## 📋 Features
-
-- 🔐 **User Authentication** (Customer and Admin roles)
-- 💰 **Deposit, Withdraw, and Transfer** operations
-- 📄 **Transaction History / Statement**
-- 🧾 **Account Management** (Balance tracking, account details)
-- 🧍‍♂️ **Role-based Access** (Admin controls & Customer dashboard)
-- 🗃️ **SQLite Database** (default for local dev)
-- 🧠 **Secure Password + MPIN Hashing**
-- 🌐 **Responsive Django Templates (Bootstrap/Tailwind UI)**
+A Django REST Framework project that simulates a core banking system, including management of branches, customers, accounts, transactions, loans, and loan payments.  
+It supports RESTful APIs to handle deposits, withdrawals, transfers, and loan payments.
 
 ---
 
-## 🏗️ Tech Stack
+## 🚀 Features
 
-| Layer | Technology |
-|-------|-------------|
-| **Frontend** | HTML5, CSS3, Bootstrap 5 / Tailwind CSS |
-| **Backend** | Django 5.x (Python 3.10+) |
-| **Database** | SQLite (development), can be migrated to PostgreSQL/MySQL |
-| **Authentication** | Django Auth (with hashed MPIN for transactions) |
-| **Version Control** | Git + GitHub |
-| **Deployment (optional)** | Render / Vercel / Railway / Heroku |
+- Manage branches, customers, and accounts
+- Perform transactions (Deposit, Withdrawal, Transfer)
+- Manage loans and loan payments
+- Auto-calculates remaining loan balance
+- Clean and testable Django REST API structure
 
 ---
 
-## 🧱 Project Structure
+## 🧱 Tech Stack
 
-banking_system/
-├── banking/ # main project config (settings, urls)
-├── accounts/ # app handling users & authentication
-├── transactions/ # app for deposit, withdraw, transfer, statement
-├── templates/ # HTML templates for views
-├── static/ # CSS, JS, images
-├── db.sqlite3 # SQLite database (auto created)
-├── manage.py
-└── README.md
-
+| Component | Technology |
+|------------|-------------|
+| Backend | Django 5.x |
+| API Framework | Django REST Framework |
+| Database | SQLite3 |
+| Language | Python 3.11+ |
+| Version Control | Git & GitHub |
 
 ---
 
-## ⚙️ Installation & Setup
+## ⚙️ Installation
 
 ### 1️⃣ Clone the repository
-```bash
-git clone https://github.com/SudipBera083/Baking-System-Management-.git
-cd Baking-System-Management
+```
+git clone https://github.com/your-username/Banking-System-Management.git
+cd Banking-System-Management
+```
 
----
-
-## ⚙️ Installation & Setup
-
-### 1️⃣ Create a virtual environment
-```bash
+### 2️⃣ Create & activate a virtual environment
+```
 python -m venv venv
-source venv/bin/activate       # on Linux/Mac
-venv\Scripts\activate        # on Windows
 ```
 
-### 2️⃣ Install dependencies
-```bash
-pip install -r requirements.txt
+**On Windows:**
+```
+venv\Scripts\activate
 ```
 
-### 3️⃣ Run migrations
-```bash
+**On macOS/Linux:**
+```
+source venv/bin/activate
+```
+
+### 3️⃣ Apply migrations
+```
+python manage.py makemigrations
 python manage.py migrate
 ```
 
 ### 4️⃣ Create a superuser
-```bash
+```
 python manage.py createsuperuser
 ```
 
 ### 5️⃣ Run the development server
-```bash
+```
 python manage.py runserver
 ```
 
-Visit **http://127.0.0.1:8000/** in your browser.
+Your API will now be available at:  
+👉 [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
 ---
 
-## 🧩 Core Django Apps
+## 🧾 API Endpoints
 
-| App | Purpose |
-|-----|----------|
-| **accounts** | Handles registration, login, profile, and MPIN validation |
-| **transactions** | Manages deposits, withdrawals, transfers, and history |
-| **admin** | Built-in Django Admin for superuser operations |
-| **api (optional)** | Future REST API endpoints using Django REST Framework |
+| Endpoint | Method | Description |
+|-----------|---------|-------------|
+| `/api/branches/` | GET / POST | List or create branches |
+| `/api/customers/` | GET / POST | List or create customers |
+| `/api/accounts/` | GET / POST | Manage customer accounts |
+| `/api/transactions/` | GET / POST | Record deposits, withdrawals, or transfers |
+| `/api/loans/` | GET / POST | List or create loans |
+| `/api/loan-payments/` | GET / POST | Manage loan payments |
+| `/api/loan-payments/pay/` | POST | Make a payment towards a loan |
 
 ---
 
-## 🛡️ Security Highlights
+## 💳 Example Request
 
-- Passwords and MPINs are hashed using Django’s built-in PBKDF2.  
-- CSRF protection, XSS protection, and SQL injection safety via Django ORM.  
-- Role-based permissions to restrict unauthorized actions.
+### ✅ POST `/api/loan-payments/pay/`
+
+Make a payment toward an existing loan.
+
+**Request Body:**
+```
+{
+  "loan_id": 1,
+  "payment_amount": 2000.00,
+  "remarks": "Monthly installment for November"
+}
+```
+
+**Success Response:**
+```
+{
+  "message": "Payment of ₹2000.00 added successfully for Loan ID 1",
+  "remaining_balance": 8000.00
+}
+```
+
+**Error Response:**
+```
+{
+  "error": "Invalid loan_id or amount"
+}
+```
+
+---
+
+## 🗃️ Database Models
+
+- Branch – Holds branch information (name, IFSC, location)
+- Customer – Customer personal details
+- Account – Linked to a customer, tracks balance and type
+- Transaction – Deposit, withdrawal, and transfer details
+- Loan – Customer loans with amount, interest rate, and duration
+- LoanPayment – Tracks payments made toward a loan
+
+---
+
+## 🧩 Known Issues
+
+❌ `/api/loan-payments/pay/` returning  
+`{"error": "Invalid loan_id or amount"}`
+
+**Cause:**  
+Possible validation issue with loan_id or incorrect field mapping (loan_amount vs amount).
+
+**Temporary Fix:**  
+Ensure the loan_id exists and is valid before submitting the payment request.
 
 ---
 
 ## 🧠 Future Enhancements
 
-✅ Integrate Django REST Framework (DRF) for APIs  
-✅ Add OTP-based verification for transactions  
-✅ Add PDF export of account statements  
-✅ Integrate real-time balance updates via AJAX  
-✅ Add two-factor authentication (2FA)
+- ✅ Add JWT authentication  
+- ✅ Dashboard for admins  
+- ✅ Add interest calculation logic for loans  
+- ✅ Add transaction summaries per customer  
 
 ---
 
-## 📜 License
+## 🤝 Contributing
 
-This project is licensed under the **MIT License**.
+1. Fork the repository  
+2. Create your feature branch  
+   ```
+   git checkout -b feature/your-feature
+   ```
+3. Commit your changes  
+   ```
+   git commit -m "Add new feature"
+   ```
+4. Push to the branch  
+   ```
+   git push origin feature/your-feature
+   ```
+5. Open a Pull Request 🚀
 
 ---
 
@@ -128,3 +179,10 @@ This project is licensed under the **MIT License**.
 **Sudip Bera**  
 💼 [LinkedIn](https://www.linkedin.com/in/sudipbera083/)  
 📧 sudipbera083@gmail.com
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License – feel free to use and modify it.
+```
